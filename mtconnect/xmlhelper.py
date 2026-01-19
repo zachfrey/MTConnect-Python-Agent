@@ -90,10 +90,12 @@ def _get_device_elements(root):
     if root_tag == "Devices":
         return find_children(root, "Device")
     elif root_tag == "MTConnectDevices":
+        # Try <Devices> wrapper first (standard MTConnect format)
         devices_container = find_child(root, "Devices")
         if devices_container is not None:
             return find_children(devices_container, "Device")
-        return []
+        # Fallback: Device directly under MTConnectDevices (simplified format)
+        return find_children(root, "Device")
     else:
         # Fallback: try to find Device elements directly under root
         return find_children(root, "Device")
